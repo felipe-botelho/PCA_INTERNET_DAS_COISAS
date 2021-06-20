@@ -53,9 +53,9 @@ void loop(){
               	lcd.clear();
         	lcd.setCursor(2, 0);
        	lcd.print("ACESSO NEGADO");
-                estado = 2;
-                delay(1000);
-                estado = 0;
+                 estado = 2;
+                 delay(1000);
+                 estado = 0;
               	lcd.clear();
               	setup();
             }
