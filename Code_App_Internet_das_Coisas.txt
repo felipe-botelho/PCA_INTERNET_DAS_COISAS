@@ -1,0 +1,89 @@
+#include <Keypad.h> 
+#include <LiquidCrystal.h>
+#include <Servo.h> 
+
+#define linhas 4
+#define colunas 4
+#define sinalSonoro 10
+
+Servo servoMotor; 
+
+String senha = "123";
+String digitada;
+int estado = 0; 
+char mapaTeclas[linhas][colunas] = {{'1','2','3'},{'4','5','6'},{'7','8','9'},{'*','0','#'}};
+const int rs = 12, en = 13, d4 = A2, d5 = A3, d6 = A4, d7 = A5;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+byte pinos_linha[linhas] = {9,8,7,6}; 
+byte pinos_coluna[colunas] = {5,4,3,2}; 
+Keypad teclado = Keypad( makeKeymap(mapaTeclas), pinos_linha, pinos_coluna, linhas, colunas );
+
+void setup(){
+  lcd.begin(16, 2);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Digite sua senha:");
+  delay (1000);
+  
+  pinMode(sinalSonoro, OUTPUT);
+  servoMotor.attach(11);
+  setLocked(true);  
+
+}
+
+void loop(){
+    char tecla = teclado.getKey();
+    if(tecla != NO_KEY){
+        estado = 1;
+        if(tecla == '#'){
+            if(verifSenha(senha,digitada)){
+                estado = 3;
+              	lcd.clear();
+        		lcd.setCursor(1, 0);
+        		lcd.print("ACESSO LIBERADO");
+                delay (1000);
+              	estado = 0;
+				setLocked(false);
+              	delay(5000);
+              	setLocked(true);
+              	delay(1000);
+              	setup();
+            }else{
+              	lcd.clear();
+        		lcd.setCursor(2, 0);
+       			lcd.print("ACESSO NEGADO");
+                estado = 2;
+                delay(1000);
+                estado = 0;
+              	lcd.clear();
+              	setup();
+            }
+            digitada = "";
+        }else{
+            digitada += tecla;
+        }
+    }
+}
+
+
+bool verifSenha(String senhaAtual, String senhaDigitada) {
+    bool result = false;
+    if(senhaAtual.compareTo(senhaDigitada)==0){
+        result = true;
+    }else{
+        result  =false;
+    }
+    return result;
+}
+
+void setLocked(int tranc){ 
+  if (tranc){ 
+      digitalWrite(sinalSonoro, LOW);
+      servoMotor.write(0); 
+  }
+  else{ 
+      digitalWrite(sinalSonoro, HIGH);
+      servoMotor.write(90);
+  }
+}
