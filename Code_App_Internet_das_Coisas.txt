@@ -40,18 +40,18 @@ void loop(){
             if(verifSenha(senha,digitada)){
                 estado = 3;
               	lcd.clear();
-        	    lcd.setCursor(1, 0);
-        	    lcd.print("ACESSO LIBERADO");
+        	lcd.setCursor(1, 0);
+        	lcd.print("ACESSO LIBERADO");
                 delay (1000);
               	estado = 0;
-	            setLocked(false);
+	        setLocked(false);
               	delay(5000);
               	setLocked(true);
               	delay(1000);
               	setup();
             }else{
                 lcd.clear();
-        	    lcd.setCursor(2, 0);
+        	lcd.setCursor(2, 0);
        	        lcd.print("ACESSO NEGADO");
                 estado = 2;
                 delay(1000);
@@ -65,7 +65,6 @@ void loop(){
         }
     }
 }
-
 
 bool verifSenha(String senhaAtual, String senhaDigitada) {
     bool result = false;
